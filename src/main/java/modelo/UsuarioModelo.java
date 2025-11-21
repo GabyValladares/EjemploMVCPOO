@@ -23,6 +23,7 @@ public class UsuarioModelo {
     }
 
     public UsuarioModelo( String nombres, String cedula, String direccion, String alias, String clave, int edad) {
+        this();
         this.idUsuario = idUsuario++;
         this.nombres = nombres;
         this.cedula = cedula;

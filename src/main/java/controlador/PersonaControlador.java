@@ -30,14 +30,36 @@ public class PersonaControlador {
         String cedula = pv.getCampoCedula();
         String direccion= pv.getCampoDireccion();
         int edad=pv.getCampoEdad();
-        //VALIDO
-        if(nombre.isEmpty()||cedula.isEmpty()||direccion.isEmpty()||edad<=0){
-            pv.mostrarMensaje("Todos los campos son obligatorios y la edad mayor a 0");
-            return;
-        }
+        // VALIDO CAMPOS OBLIGATORIOS
+            if (nombre.isEmpty() || cedula.isEmpty() || direccion.isEmpty()) {
+                pv.mostrarMensaje("Todos los campos (Nombre, Cédula, Dirección) son obligatorios.");
+                return;
+            }
+
+            // VALIDO LA EDAD
+            if (edad <= 0) {
+                pv.mostrarMensaje("La edad debe ser mayor a 0.");
+                return;
+            }
+
+            // VALIDO LA CÉDULA (usando el método del modelo)
+            if (cedula.length() != 10) {
+                pv.mostrarMensaje("La cédula debe tener exactamente 10 dígitos.");
+                return;
+            }
+
+            // Validar la cédula con el método del modelo (PersonaModelo)
+            boolean esCedulaValida = pm.validarCedula(cedula); // <-- ¡CORREGIDO!
+
+            if (!esCedulaValida) {
+                pv.mostrarMensaje("La cédula ingresada no es válida.");
+                return;
+            }
         //SI TODO OK ARMO EL MODELO 
         PersonaModelo nuevaPersona=new PersonaModelo(nombre, edad, cedula, direccion);
-        //MOSTRAR EL TOSTRING
+        nuevaPersona.insertarPersona();
+
+//MOSTRAR EL TOSTRING
         pv.setCampoResultado(nuevaPersona.toString());
     }
 
