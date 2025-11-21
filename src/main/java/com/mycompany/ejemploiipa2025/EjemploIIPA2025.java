@@ -4,15 +4,15 @@
 package com.mycompany.ejemploiipa2025;
 
 import controlador.PersonaControlador;
-import controlador.UsuarioControlador;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+//import controlador.UsuarioControlador;
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
 import modelo.ConexionBDD;
 import modelo.PersonaModelo;
-import modelo.UsuarioModelo;
+//import modelo.UsuarioModelo;
 import vista.PersonaVista;
-import vista.UsuarioVista;
+//import vista.UsuarioVista;
 
 /**
  *
