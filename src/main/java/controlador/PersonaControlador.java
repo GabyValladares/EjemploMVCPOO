@@ -57,7 +57,7 @@ public class PersonaControlador {
             }
         //SI TODO OK ARMO EL MODELO 
         PersonaModelo nuevaPersona=new PersonaModelo(nombre, edad, cedula, direccion);
-        nuevaPersona.insertarPersona();
+        nuevaPersona.insertarPersona(nuevaPersona);
 
 //MOSTRAR EL TOSTRING
         pv.setCampoResultado(nuevaPersona.toString());

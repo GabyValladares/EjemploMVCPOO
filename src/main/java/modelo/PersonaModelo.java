@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
  * @author Usuario
  */
 public class PersonaModelo {
+    private int idPersona;
     private String nombres;
     private int edad;
     private String cedula;
@@ -68,11 +69,11 @@ public class PersonaModelo {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-    public void insertarPersona() {
+    public void insertarPersona(PersonaModelo p) {
         //1.- UTILIZAR EXCEPCIÓN
         try {//LANZAR TESTEAR UN CONJUNTO DE CÓDIGO 
-            String sentenciaSQL ="insert into persona(nombres,cedula, direccion,edad)\n" +
-"values('"+getNombres()+"','"+getCedula()+"','"+getDireccion()+"','"+getEdad()+"');" ;
+            String sentenciaSQL ="insert into personas(Nombres,Cedula, Direccion,Edad)\n" +
+            "values('"+p.getNombres()+"','"+p.getCedula()+"','"+p.getDireccion()+"','"+p.getEdad()+"');" ;
             ejecutar = conectado.prepareCall(sentenciaSQL);
             //TODA INSERCIÓN DEVUELVE UN ESTADO >0 CUANDO FUE FAVORABLE Y MENOR A O CUANDO NO SE REALIZÓ 
             int resu = ejecutar.executeUpdate();
@@ -135,8 +136,60 @@ public class PersonaModelo {
             return (digtFinal == digitoEsperado); // Si no, debe coincidir con 10 - (resto)
         }
     }
+    public void obtenerIdPersona(String cedula){
+        try {
+            String consulta="select idPersonas\n" +
+                            "from personas\n" +
+                            "where Cedula='"+cedula+"';";
+        } catch (Exception e) {
+        }
+        
+    }
+     public int buscarUsuarioPorCedula(String cedulaBuscada) {
+        // Conectar a la base de datos
+        ConexionBDD objetoConexion = new ConexionBDD();
+        Connection conexionActual = objetoConexion.conectar();
 
-   
-    
+        // Si la conexión funciona
+        if (conexionActual != null) {
+            try {
+                // Consulta SQL para buscar por cédula
+                String sentenciaSQL = "SELECT  idPersonas from personas WHERE Cedula = ?";
+                PreparedStatement sentenciaPreparada = conexionActual.prepareStatement(sentenciaSQL);
+
+                // Reemplazar ? con la cédula que buscamos
+                sentenciaPreparada.setString(1, cedulaBuscada);
+
+                // Ejecutar consulta
+                ResultSet resultadoConsulta = sentenciaPreparada.executeQuery();
+
+                // Si encontró un usuario
+                if (resultadoConsulta.next()) {
+                    // Crear objeto usuario con los datos encontrados
+                    int idEncontrado = (resultadoConsulta.getInt("idPersonas"));
+                   
+                    // Cerrar conexiones
+                    resultadoConsulta.close();
+                    sentenciaPreparada.close();
+                    conexionActual.close();
+
+                    // Devolver usuario encontrado
+                    return idEncontrado;
+                }
+
+                // Cerrar conexiones si no encontró
+                resultadoConsulta.close();
+                sentenciaPreparada.close();
+                conexionActual.close();
+
+            } catch (SQLException error) {
+                System.out.println("Error al buscar persona: " + error.getMessage());
+            }
+        }
+        return 0;
+
+
+       
+    }
     
 }

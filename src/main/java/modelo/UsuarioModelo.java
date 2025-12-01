@@ -4,19 +4,19 @@
  */
 package modelo;
 
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author hp
  */
-public class UsuarioModelo {
+public class UsuarioModelo extends PersonaModelo {
     //ATRIBUTOS 
     private static int idUsuario;
-    private String nombres;
-    private String cedula;
-    private String direccion;
     private String alias;
     private String clave;
-    private int edad;
+    
 
     public UsuarioModelo() {
         idUsuario++;
@@ -24,46 +24,25 @@ public class UsuarioModelo {
 
     public UsuarioModelo( String nombres, String cedula, String direccion, String alias, String clave, int edad) {
         this();
-        this.idUsuario = idUsuario++;
-        this.nombres = nombres;
-        this.cedula = cedula;
-        this.direccion = direccion;
+        
         this.alias = alias;
         this.clave = clave;
-        this.edad = edad;
+        
+     
     }
+
+    public UsuarioModelo(String alias, String clave, String nombres, int edad, String cedula, String direccion) {
+        super(nombres, edad, cedula, direccion);
+        this.alias = alias;
+        this.clave = clave;
+    }
+    
 
     public static int getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public String getNombres() {
-        return nombres;
-    }
-
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public String getCedula() {
-        return cedula;
-    }
-
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
+   
 
     public String getAlias() {
         return alias;
@@ -81,22 +60,41 @@ public class UsuarioModelo {
         this.clave = clave;
     }
 
-    public int getEdad() {
-        return edad;
+ public void insertarUsuario( PersonaModelo p1) {
+        //1.- UTILIZAR EXCEPCIÓN
+        try {//LANZAR TESTEAR UN CONJUNTO DE CÓDIGO 
+         
+            int idPersona = p1.buscarUsuarioPorCedula(p1.getCedula());
+            String sentenciaSQL ="insert into usuarios(Alias ,Contrasenia, FK_IdPersona)" +
+            "values('"+getAlias()+"','"+getClave()+"','"+p1.getCedula()+"');" ;
+            ejecutar = conectado.prepareCall(sentenciaSQL);
+            //TODA INSERCIÓN DEVUELVE UN ESTADO >0 CUANDO FUE FAVORABLE Y MENOR A O CUANDO NO SE REALIZÓ 
+            int resu = ejecutar.executeUpdate();
+            if (resu > 0) {
+                JOptionPane.showMessageDialog(null,"Usuario Creado con éxito");
+                ejecutar.close();
+              
+            }else{
+                JOptionPane.showMessageDialog(null,"El Usuario no ha sido creado,"
+                        + " revise que los datos ingresados sean correctos");
+            }
+
+        } catch (SQLException e) {
+            //CAPTURAR PARA DARLE UN TRATAMIENTO 
+            JOptionPane.showMessageDialog(null,"Comuniquese con el Administrador para solicitar ayuda");
+                
+        }
+
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-
-    @Override
-    public String toString() {
+   
+    public String toString(PersonaModelo p) {
         return "DATOS DEL USUARIO" +"\n"+
                 "Id:"+getIdUsuario()+"\n"+
-                "Nombres:"+getNombres()+"\n"+
-                "Cédula:"+getCedula()+"\n"+
-                "Edad:"+getEdad()+"\n"+
-                "Dirección:"+getDireccion()+"\n"+
+                "Nombres:"+p.getNombres()+"\n"+
+                "Cédula:"+p.getCedula()+"\n"+
+                "Edad:"+p.getEdad()+"\n"+
+                "Dirección:"+p.getDireccion()+"\n"+
                 "Alias:"+getAlias()+"\n"+
                 "Clave:"+getClave();}
     
