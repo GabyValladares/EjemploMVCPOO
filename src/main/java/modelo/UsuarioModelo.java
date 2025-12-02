@@ -36,8 +36,12 @@ public class UsuarioModelo extends PersonaModelo {
         this.alias = alias;
         this.clave = clave;
     }
+        
+    @Override  // Indica que este método reemplaza uno heredado del padre (PersonaModelo)
+    public void setIdPersona(int idPersona) {  // Método para asignar un número como ID de persona
+      super.setIdPersona(idPersona);  // Delega la asignación real al método de la clase padre
+    }
     
-
     public static int getIdUsuario() {
         return idUsuario;
     }
@@ -59,32 +63,57 @@ public class UsuarioModelo extends PersonaModelo {
     public void setClave(String clave) {
         this.clave = clave;
     }
+    public void insertarUsuario(PersonaModelo p1) {
+        // 1. CONECTAR A LA BASE DE DATOS
+        ConexionBDD conectar = new ConexionBDD();
+        java.sql.Connection conectado = conectar.conectar();
+        java.sql.PreparedStatement ejecutar = null;
 
- public void insertarUsuario( PersonaModelo p1) {
-        //1.- UTILIZAR EXCEPCIÓN
-        try {//LANZAR TESTEAR UN CONJUNTO DE CÓDIGO 
-         
-            int idPersona = p1.buscarUsuarioPorCedula(p1.getCedula());
-            String sentenciaSQL ="insert into usuarios(Alias ,Contrasenia, FK_IdPersona)" +
-            "values('"+getAlias()+"','"+getClave()+"','"+p1.getCedula()+"');" ;
-            ejecutar = conectado.prepareCall(sentenciaSQL);
-            //TODA INSERCIÓN DEVUELVE UN ESTADO >0 CUANDO FUE FAVORABLE Y MENOR A O CUANDO NO SE REALIZÓ 
-            int resu = ejecutar.executeUpdate();
-            if (resu > 0) {
-                JOptionPane.showMessageDialog(null,"Usuario Creado con éxito");
-                ejecutar.close();
-              
-            }else{
-                JOptionPane.showMessageDialog(null,"El Usuario no ha sido creado,"
-                        + " revise que los datos ingresados sean correctos");
+        try {
+            // 2. Obtener ID de la persona que ya se guardó
+            int idPersona = p1.getIdPersona();
+
+            // 3. Si ID es 0, hubo error al guardar persona
+            if (idPersona == 0) {
+                JOptionPane.showMessageDialog(null, " Error: La persona no tiene ID");
+                return;
+            }
+
+            System.out.println(" Insertando usuario con ID Persona: " + idPersona);
+
+            // 4. Preparar consulta SQL SEGURA
+            String sql = "INSERT INTO usuarios(Alias, Contrasenia, FK_IdPersona) VALUES(?, ?, ?)";
+
+            // 5. Ejecutar con parámetros
+            ejecutar = conectado.prepareStatement(sql);
+            ejecutar.setString(1, this.getAlias());  // Alias del usuario actual
+            ejecutar.setString(2, this.getClave());  // Clave del usuario actual  
+            ejecutar.setInt(3, idPersona);           // ID de la persona relacionada
+
+            // 6. Ejecutar inserción
+            int filasAfectadas = ejecutar.executeUpdate();
+
+            // 7. Mostrar resultado
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(null, " Usuario creado con éxito!");
+            } else {
+                JOptionPane.showMessageDialog(null, "El usuario no ha sido creado");
             }
 
         } catch (SQLException e) {
-            //CAPTURAR PARA DARLE UN TRATAMIENTO 
-            JOptionPane.showMessageDialog(null,"Comuniquese con el Administrador para solicitar ayuda");
-                
+            JOptionPane.showMessageDialog(null, " Error SQL: " + e.getMessage());
+            e.printStackTrace();  // Para ver el error en consola
+        } finally {
+            // 8. Cerrar recursos
+            try {
+                if (ejecutar != null) 
+                    ejecutar.close();
+                if (conectado != null) 
+                    conectado.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
    
@@ -96,9 +125,7 @@ public class UsuarioModelo extends PersonaModelo {
                 "Edad:"+p.getEdad()+"\n"+
                 "Dirección:"+p.getDireccion()+"\n"+
                 "Alias:"+getAlias()+"\n"+
-                "Clave:"+getClave();}
-    
-    
-    
-    
+                "Clave:"+getClave();
+    }
+       
 }

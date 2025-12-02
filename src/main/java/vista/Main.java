@@ -4,9 +4,9 @@
  */
 package vista;
 
-import controlador.PersonaControlador;
+//import controlador.PersonaControlador;
 import controlador.UsuarioControlador;
-import modelo.PersonaModelo;
+//import modelo.PersonaModelo;
 import modelo.UsuarioModelo;
 
 /**

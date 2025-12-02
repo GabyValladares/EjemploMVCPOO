@@ -20,13 +20,11 @@ public class PersonaModelo {
     private int edad;
     private String cedula;
     private String direccion;
+    
    ConexionBDD conectar = new ConexionBDD();
         //CLASE QUE ME PERMITA CONECTARME DIRECTAMENTE A MYSQL
         Connection conectado = (Connection) conectar.conectar();
-        //CLASE QUE ME PERMITE EJECUTAR MI SENTENCIA SQL
-        PreparedStatement ejecutar;
-        //OBTENER RESULTADOS DE LA CONSULTA
-        ResultSet res;
+      
         
     public PersonaModelo() {
     }
@@ -37,7 +35,14 @@ public class PersonaModelo {
         this.cedula = cedula;
         this.direccion = direccion;
     }
+    //FALTO AGREGAR EL GET DEL ID
+     public int getIdPersona() {
+        return idPersona;
+    }
 
+    public void setIdPersona(int idPersona) {
+        this.idPersona = idPersona;
+    }
     public String getNombres() {
         return nombres;
     }
@@ -69,30 +74,57 @@ public class PersonaModelo {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
+    
     public void insertarPersona(PersonaModelo p) {
-        //1.- UTILIZAR EXCEPCIÓN
-        try {//LANZAR TESTEAR UN CONJUNTO DE CÓDIGO 
-            String sentenciaSQL ="insert into personas(Nombres,Cedula, Direccion,Edad)\n" +
-            "values('"+p.getNombres()+"','"+p.getCedula()+"','"+p.getDireccion()+"','"+p.getEdad()+"');" ;
-            ejecutar = conectado.prepareCall(sentenciaSQL);
-            //TODA INSERCIÓN DEVUELVE UN ESTADO >0 CUANDO FUE FAVORABLE Y MENOR A O CUANDO NO SE REALIZÓ 
-            int resu = ejecutar.executeUpdate();
-            if (resu > 0) {
-                JOptionPane.showMessageDialog(null,"Postulante Creado con éxito");
-                ejecutar.close();
-              
-            }else{
-                JOptionPane.showMessageDialog(null,"El Postulante no ha sido creado,"
-                        + " revise que los datos ingresados sean correctos");
-            }
+        // DECLARAR 'ejecutar' como VARIABLE LOCAL
+        PreparedStatement ejecutar = null;
+        ResultSet idsGenerados = null;  // Declarar aquí para cerrar en finally
 
-        } catch (SQLException e) {
-            //CAPTURAR PARA DARLE UN TRATAMIENTO 
-            JOptionPane.showMessageDialog(null,"Comuniquese con el Administrador para solicitar ayuda");
-                
-        }
+       try {
+           // 1. Insertar la persona usando parámetros 
+           String sentenciaSQL = "INSERT INTO personas(Nombres, Cedula, Direccion, Edad) " +
+                                "VALUES(?, ?, ?, ?)";
 
-    }
+           // Usamos RETURN_GENERATED_KEYS para obtener el ID automático
+           ejecutar = conectado.prepareStatement(sentenciaSQL, java.sql.Statement.RETURN_GENERATED_KEYS);
+           ejecutar.setString(1, p.getNombres());
+           ejecutar.setString(2, p.getCedula());
+           ejecutar.setString(3, p.getDireccion());
+           ejecutar.setInt(4, p.getEdad());
+
+           int filasAfectadas = ejecutar.executeUpdate();
+
+           if (filasAfectadas > 0) {
+               // Obtener el ID generado automáticamente por MySQL
+               idsGenerados = ejecutar.getGeneratedKeys();  // Asignar a variable
+               if (idsGenerados.next()) {
+                   int idGenerado = idsGenerados.getInt(1);
+                   p.setIdPersona(idGenerado);  // Asignar el ID al objeto
+                   JOptionPane.showMessageDialog(null, " Persona creada con éxito. ID: " + idGenerado);
+               }
+           } else {
+               JOptionPane.showMessageDialog(null, " La persona no ha sido creada");
+           }
+
+       } catch (SQLException e) {
+           JOptionPane.showMessageDialog(null, " Error al crear persona: " + e.getMessage());
+           e.printStackTrace();  // Esto ayuda a ver el error en consola
+
+       } finally {
+           // CIERRE SEGURO  SOLO recursos locales
+           try {
+               if (idsGenerados != null) {
+                   idsGenerados.close();  // 1. Cerrar ResultSet
+               }
+               if (ejecutar != null) {
+                   ejecutar.close();      // 2. Cerrar PreparedStatement
+               }
+               // NO cerrar conectado aquí  es atributo compartido
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+       }
+   }
 
     @Override
     public String toString() {
@@ -136,60 +168,5 @@ public class PersonaModelo {
             return (digtFinal == digitoEsperado); // Si no, debe coincidir con 10 - (resto)
         }
     }
-    public void obtenerIdPersona(String cedula){
-        try {
-            String consulta="select idPersonas\n" +
-                            "from personas\n" +
-                            "where Cedula='"+cedula+"';";
-        } catch (Exception e) {
-        }
-        
-    }
-     public int buscarUsuarioPorCedula(String cedulaBuscada) {
-        // Conectar a la base de datos
-        ConexionBDD objetoConexion = new ConexionBDD();
-        Connection conexionActual = objetoConexion.conectar();
-
-        // Si la conexión funciona
-        if (conexionActual != null) {
-            try {
-                // Consulta SQL para buscar por cédula
-                String sentenciaSQL = "SELECT  idPersonas from personas WHERE Cedula = ?";
-                PreparedStatement sentenciaPreparada = conexionActual.prepareStatement(sentenciaSQL);
-
-                // Reemplazar ? con la cédula que buscamos
-                sentenciaPreparada.setString(1, cedulaBuscada);
-
-                // Ejecutar consulta
-                ResultSet resultadoConsulta = sentenciaPreparada.executeQuery();
-
-                // Si encontró un usuario
-                if (resultadoConsulta.next()) {
-                    // Crear objeto usuario con los datos encontrados
-                    int idEncontrado = (resultadoConsulta.getInt("idPersonas"));
-                   
-                    // Cerrar conexiones
-                    resultadoConsulta.close();
-                    sentenciaPreparada.close();
-                    conexionActual.close();
-
-                    // Devolver usuario encontrado
-                    return idEncontrado;
-                }
-
-                // Cerrar conexiones si no encontró
-                resultadoConsulta.close();
-                sentenciaPreparada.close();
-                conexionActual.close();
-
-            } catch (SQLException error) {
-                System.out.println("Error al buscar persona: " + error.getMessage());
-            }
-        }
-        return 0;
-
-
-       
-    }
-    
+     
 }

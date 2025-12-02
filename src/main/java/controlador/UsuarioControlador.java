@@ -7,7 +7,7 @@ package controlador;
 import modelo.PersonaModelo;
 import modelo.UsuarioModelo;
 import vista.PersonaUsuarioVista;
-import vista.UsuarioVista;
+//import vista.UsuarioVista;
 
 /**
  *
@@ -27,49 +27,96 @@ public class UsuarioControlador {
         this.modelo = modelo;
         this.vista = vista;
     }
-    //MÉTODOS
-    public void generarUsuario(){
-        // RECUPERAR LA INFORMACIÓN DEL FRONTEND
-
+    // Crea: PersonaModelo Y UsuarioModelo
+  public void generarUsuario() {
+        System.out.println("Iniciando Generacion Usuario ");
+        
+        // 1. RECUPERAR DATOS
         String alias = vista.getTxtAlias().trim();
         String clave = vista.getTxtClave().trim();
         String cedula = vista.getTxtCedula().trim();
         String nombre = vista.getTxtNombres().trim();
-   
-        String direccion= vista.getTxtDireccion();
-        String edad=vista.getTxtEdad();
+        String direccion = vista.getTxtDireccion().trim();
+        String edadStr = vista.getTxtEdad().trim();
         
-    
-   
-        
-        //COMPROBAR LOS DATOS INGRESADOS POR EL USUARIO
-        //OR u O ->||
-        //AND o y -> &&
-        // VALIDACIÓN CORRECTA: campos vacíos 
-        if (alias.isEmpty() || clave.isEmpty()) 
-         {
-        vista.mostrarMensaje("Todos los campos son obligatorios. Por favor complételos.");
-        return;
+        System.out.println("Datos capturados:");
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Cédula: " + cedula);
+        System.out.println("Edad: " + edadStr);
+        System.out.println("Alias: " + alias);
+
+        // 2. VALIDACIONES
+        if (alias.isEmpty() || clave.isEmpty() || cedula.isEmpty() || 
+            nombre.isEmpty() || direccion.isEmpty() || edadStr.isEmpty()) {
+            vista.mostrarMensaje(" Todos los campos son obligatorios.");
+            return;
         }
 
-     
+        // Validar edad
+        int edad;
+        try {
+            edad = Integer.parseInt(edadStr);
+            if (edad <= 0) {
+                vista.mostrarMensaje(" La edad debe ser mayor a 0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            vista.mostrarMensaje("️ La edad debe ser un número válido.");
+            return;
+        }
 
-       
+        // Validar cédula (10 dígitos)
+        if (cedula.length() != 10) {
+            vista.mostrarMensaje("️ La cédula debe tener 10 dígitos.");
+            return;
+        }
+
+        // 3. CREAR PERSONA
+        System.out.println("Creando objeto PersonaModelo");
+        PersonaModelo nuevaPersona = new PersonaModelo(nombre, edad, cedula, direccion);
         
-    //  SI TODO ESTÁ CORRECTA INICIALIZAMOS EL MODELO
-        PersonaModelo nuevaPersona=new PersonaModelo();
-        UsuarioModelo nuevoUsuario=new UsuarioModelo();
+        // Validar cédula con algoritmo
+        if (!nuevaPersona.validarCedula(cedula)) {
+            vista.mostrarMensaje("️ Cédula inválida.");
+            return;
+        }
+
+        // 4. INSERTAR PERSONA EN BD
+        System.out.println("Insertando persona en BDD");
+        nuevaPersona.insertarPersona(nuevaPersona);
+        
+        // Verificar si se generó ID
+        int idPersona = nuevaPersona.getIdPersona();
+        System.out.println("ID Persona generado: " + idPersona);
+        
+        if (idPersona == 0) {
+            vista.mostrarMensaje(" Error al guardar persona. Intente nuevamente.");
+            return;
+        }
+
+        // 5. CREAR USUARIO
+        System.out.println("Creando objeto UsuarioModelo");
+        UsuarioModelo nuevoUsuario = new UsuarioModelo();
         nuevoUsuario.setAlias(alias);
         nuevoUsuario.setClave(clave);
-        nuevaPersona.setNombres(nombre);
-        nuevaPersona.setDireccion(direccion);
-        nuevaPersona.setEdad(Integer.parseInt(edad));
-        nuevaPersona.setCedula(cedula);
-        nuevaPersona.insertarPersona(nuevaPersona);
-        nuevoUsuario.insertarUsuario(nuevoUsuario);
+        nuevoUsuario.setIdPersona(idPersona);  // Pasar el ID
         
-        vista.setCampoResultado(nuevoUsuario.toString());
+        // 6. INSERTAR USUARIO EN BDD
+        System.out.println("Insertando usuario en BDD");
+        nuevoUsuario.insertarUsuario(nuevaPersona);
+
+        // 7. MOSTRAR RESULTADO
+        String resultado = "DATOS GUARDADOS\n" +
+                          "ID Persona: " + idPersona + "\n" +
+                          "Nombre: " + nombre + "\n" +
+                          "Cédula: " + cedula + "\n" +
+                          "Edad: " + edad + "\n" +
+                          "Dirección: " + direccion + "\n" +
+                          "Alias: " + alias + "\n" +
+                          "Clave: " + clave ;
         
+        vista.setCampoResultado(resultado);
+        System.out.println("PROCESO COMPLETADO ");
         
     }
      public void iniciar() {

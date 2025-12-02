@@ -23,7 +23,7 @@ public class PersonaControlador {
         this.pm = pm;
         this.pv = pv;
     }
-
+//Maneja creación de PERSONA
     public void manejarPersona() {
         //RECUPERO LOS DATOS
         String nombre = pv.getCampoNombres();
@@ -49,7 +49,7 @@ public class PersonaControlador {
             }
 
             // Validar la cédula con el método del modelo (PersonaModelo)
-            boolean esCedulaValida = pm.validarCedula(cedula); // <-- ¡CORREGIDO!
+            boolean esCedulaValida = pm.validarCedula(cedula);
 
             if (!esCedulaValida) {
                 pv.mostrarMensaje("La cédula ingresada no es válida.");
@@ -59,7 +59,7 @@ public class PersonaControlador {
         PersonaModelo nuevaPersona=new PersonaModelo(nombre, edad, cedula, direccion);
         nuevaPersona.insertarPersona(nuevaPersona);
 
-//MOSTRAR EL TOSTRING
+        //MOSTRAR EL TOSTRING
         pv.setCampoResultado(nuevaPersona.toString());
     }
 
