@@ -34,8 +34,7 @@ public class Main {
         UsuarioModelo  usuario = new UsuarioModelo();
         PersonaUsuarioVista persona = new  PersonaUsuarioVista ();
         UsuarioControlador controlador = new UsuarioControlador (usuario, persona);
-        
-        
+
         controlador.iniciar();
     }    
 }

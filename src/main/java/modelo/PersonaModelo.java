@@ -88,7 +88,7 @@ public class PersonaModelo {
 
         } catch (SQLException e) {
             //CAPTURAR PARA DARLE UN TRATAMIENTO 
-            JOptionPane.showMessageDialog(null,"Comuniquese con el Administrador para solicitar ayuda");
+            JOptionPane.showMessageDialog(null,"Comuniquese con el Administrador para solicitar ayuda" + e);
                 
         }
 

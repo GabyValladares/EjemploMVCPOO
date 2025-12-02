@@ -52,10 +52,6 @@ public class UsuarioControlador {
         return;
         }
 
-     
-
-       
-        
     //  SI TODO ESTÁ CORRECTA INICIALIZAMOS EL MODELO
         PersonaModelo nuevaPersona=new PersonaModelo();
         UsuarioModelo nuevoUsuario=new UsuarioModelo();
@@ -66,11 +62,10 @@ public class UsuarioControlador {
         nuevaPersona.setEdad(Integer.parseInt(edad));
         nuevaPersona.setCedula(cedula);
         nuevaPersona.insertarPersona(nuevaPersona);
-        nuevoUsuario.insertarUsuario(nuevoUsuario);
+        nuevoUsuario.insertarUsuario(nuevaPersona);
         
         vista.setCampoResultado(nuevoUsuario.toString());
-        
-        
+
     }
      public void iniciar() {
         // 1. Asignar el Controlador como oyente a los botones de la Vista
@@ -80,7 +75,6 @@ public class UsuarioControlador {
         // 2. Mostrar la Vista
         vista.setVisible(true);
         //actualizarListaPersonas(); // Carga inicial
-}
-    
-     
+    }
+  
 }

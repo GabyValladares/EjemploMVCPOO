@@ -66,7 +66,7 @@ public class UsuarioModelo extends PersonaModelo {
          
             int idPersona = p1.buscarUsuarioPorCedula(p1.getCedula());
             String sentenciaSQL ="insert into usuarios(Alias ,Contrasenia, FK_IdPersona)" +
-            "values('"+getAlias()+"','"+getClave()+"','"+p1.getCedula()+"');" ;
+            "values('"+getAlias()+"','"+getClave()+"','"+idPersona+"');" ;
             ejecutar = conectado.prepareCall(sentenciaSQL);
             //TODA INSERCIÓN DEVUELVE UN ESTADO >0 CUANDO FUE FAVORABLE Y MENOR A O CUANDO NO SE REALIZÓ 
             int resu = ejecutar.executeUpdate();
@@ -87,7 +87,6 @@ public class UsuarioModelo extends PersonaModelo {
 
     }
 
-   
     public String toString(PersonaModelo p) {
         return "DATOS DEL USUARIO" +"\n"+
                 "Id:"+getIdUsuario()+"\n"+
@@ -97,8 +96,5 @@ public class UsuarioModelo extends PersonaModelo {
                 "Dirección:"+p.getDireccion()+"\n"+
                 "Alias:"+getAlias()+"\n"+
                 "Clave:"+getClave();}
-    
-    
-    
-    
+
 }
