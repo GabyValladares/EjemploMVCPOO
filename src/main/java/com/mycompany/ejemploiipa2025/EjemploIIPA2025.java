@@ -5,6 +5,7 @@ package com.mycompany.ejemploiipa2025;
 
 import controlador.UsuarioControlador;
 import modelo.UsuarioModelo;
+import vista.PersonaUsuarioVista;
 import vista.UsuarioVista;
 
 /**
@@ -15,7 +16,7 @@ public class EjemploIIPA2025 {
 
     public static void main(String[] args) {
         UsuarioModelo modelo = new UsuarioModelo();
-        UsuarioVista vista = new UsuarioVista();
+        PersonaUsuarioVista vista = new PersonaUsuarioVista();
         UsuarioControlador controlador = new UsuarioControlador(modelo, vista);
 
         controlador.iniciar();
