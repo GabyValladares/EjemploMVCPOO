@@ -29,6 +29,12 @@ public class UsuarioControlador {
         this.modelo = modelo;
         this.vista = vista;
     }
+    
+      public UsuarioControlador(UsuarioModelo modelo, InicioSesionVista vista) {
+        this.modelo = modelo;
+        this.vistaSesion = vista;
+    }
+      
     //MÉTODOS
     public void generarUsuario(){
         // RECUPERAR LA INFORMACIÓN DEL FRONTEND
@@ -84,6 +90,12 @@ public class UsuarioControlador {
         
         boolean resultadoInicioSesion=modelo.validarCredenciales(modelo);
         
+         if (resultadoInicioSesion){
+             PersonaUsuarioVista persona=new PersonaUsuarioVista();
+             persona.setVisible(true);
+         
+         }
+        
         
         
     
@@ -98,5 +110,13 @@ public class UsuarioControlador {
         vista.setVisible(true);
         //actualizarListaPersonas(); // Carga inicial
     }
-  
+    public void invocarInicioSesion() {
+          // 1. Asignar el Controlador como oyente a los botones de la Vista
+          vistaSesion.getIniciarSesion().addActionListener(e -> validarInicioSesion());
+          //pv.getBtnListar().addActionListener(e -> actualizarListaPersonas());
+
+          // 2. Mostrar la Vista
+          vistaSesion.setVisible(true);
+          //actualizarListaPersonas(); // Carga inicial
+      }
 }

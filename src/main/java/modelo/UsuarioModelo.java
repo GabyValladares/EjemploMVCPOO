@@ -4,6 +4,7 @@
  */
 package modelo;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -104,14 +105,14 @@ public class UsuarioModelo extends PersonaModelo {
             "'"+p1.getAlias()+"','"+p1.getClave()+"');" ;
             ejecutar = conectado.prepareCall(sentenciaSQL);
             //TODA INSERCIÓN DEVUELVE UN ESTADO >0 CUANDO FUE FAVORABLE Y MENOR A O CUANDO NO SE REALIZÓ 
-            int resu = ejecutar.executeUpdate();
-            if (resu > 0) {
+            ResultSet resu = ejecutar.executeQuery();
+            while (resu.next()) {
                 JOptionPane.showMessageDialog(null,"Bienvenido");
                 ejecutar.close();
                 return true;
               
-            }else{
-                JOptionPane.showMessageDialog(null,"El Usuario no ha sido creado,"
+            }{
+                JOptionPane.showMessageDialog(null,"El Usuario no existe,"
                         + " revise que los datos ingresados sean correctos");
                 return false;
             }

@@ -4,6 +4,7 @@
  */
 package vista;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 /**
@@ -99,6 +100,9 @@ public class InicioSesionVista extends javax.swing.JFrame {
       public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
+         public JButton getIniciarSesion(){
+         return btnIniciar;
+     }
         
     
     /**

@@ -4,9 +4,17 @@
 package com.mycompany.ejemploiipa2025;
 
 import controlador.UsuarioControlador;
+//import controlador.UsuarioControlador;
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+import modelo.ConexionBDD;
+
 import modelo.UsuarioModelo;
-import vista.PersonaUsuarioVista;
-import vista.UsuarioVista;
+import vista.InicioSesionVista;
+//import modelo.UsuarioModelo;
+
+//import vista.UsuarioVista;
 
 /**
  *
@@ -15,10 +23,27 @@ import vista.UsuarioVista;
 public class EjemploIIPA2025 {
 
     public static void main(String[] args) {
-        UsuarioModelo modelo = new UsuarioModelo();
-        PersonaUsuarioVista vista = new PersonaUsuarioVista();
-        UsuarioControlador controlador = new UsuarioControlador(modelo, vista);
+//        UsuarioModelo modelo = new UsuarioModelo();
+//        UsuarioVista vista = new UsuarioVista();
+////        UsuarioControlador controlador = new UsuarioControlador(modelo, vista);
+//        
+//        PersonaModelo modelo = new PersonaModelo();
+//        PersonaVista vista = new  PersonaVista();
+//         PersonaControlador controlador = new  PersonaControlador(modelo, vista);
+//
+    //controlador.iniciar();
+        ConexionBDD base = new ConexionBDD();
+        base.conectar();
+        
+     
 
-        controlador.iniciar();
+//EJECUTAMOS EL INICIO DE SESIÓN
+//ñññ
+    UsuarioModelo modelo = new UsuarioModelo();
+    InicioSesionVista vista = new   InicioSesionVista();
+    UsuarioControlador controlador = new UsuarioControlador(modelo, vista);
+    controlador.invocarInicioSesion();
+        
+
     }
 }
