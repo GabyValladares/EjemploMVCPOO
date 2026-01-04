@@ -4,7 +4,11 @@
  */
 package modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -116,7 +120,31 @@ public class UsuarioModelo extends PersonaModelo {
         }
     }
 
-   
+   public ArrayList<Object[]> datosUsuarios() throws SQLException {
+        ArrayList<Object[]> listaObject=new ArrayList<>();
+        ConexionBDD parametros = new ConexionBDD();
+        Connection conectar = (Connection) parametros.conectar();
+        
+        java.sql.PreparedStatement ejecutar = null;
+        
+        String sql = "call sp_listaPersonas();";
+        ejecutar = (PreparedStatement) conectar.prepareCall(sql);
+        ResultSet res = ejecutar.executeQuery();
+        int cont = 1;
+        while (res.next()) {
+            Object[] obpersona = new Object[6];
+            for (int i = 1; i < 6; i++) {
+                obpersona[i] = res.getObject(i+1);
+            }
+            obpersona[0]=cont;
+            listaObject.add(obpersona);
+            cont++;
+        }
+        ejecutar.close();
+        return listaObject;
+
+       
+    }
     public String toString(PersonaModelo p) {
         return "DATOS DEL USUARIO" +"\n"+
                 "Id:"+getIdUsuario()+"\n"+

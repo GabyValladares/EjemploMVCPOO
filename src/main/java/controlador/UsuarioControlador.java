@@ -4,6 +4,9 @@
  */
 package controlador;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 import modelo.PersonaModelo;
 import modelo.UsuarioModelo;
 import vista.PersonaUsuarioVista;
@@ -14,12 +17,13 @@ import vista.PersonaUsuarioVista;
  * @author hp
  */
 public class UsuarioControlador {
+
     //ATRIBUTOS
     private UsuarioModelo modelo;
     private PersonaUsuarioVista vista;
-    
-    //CONSTRUCTORES
+    ArrayList<UsuarioModelo> listaUsuarios = new ArrayList<>();
 
+    //CONSTRUCTORES
     public UsuarioControlador() {
     }
 
@@ -27,10 +31,11 @@ public class UsuarioControlador {
         this.modelo = modelo;
         this.vista = vista;
     }
+
     // Crea: PersonaModelo Y UsuarioModelo
-  public void generarUsuario() {
+    public void generarUsuario() {
         System.out.println("Iniciando Generacion Usuario ");
-        
+
         // 1. RECUPERAR DATOS
         String alias = vista.getTxtAlias().trim();
         String clave = vista.getTxtClave().trim();
@@ -38,7 +43,7 @@ public class UsuarioControlador {
         String nombre = vista.getTxtNombres().trim();
         String direccion = vista.getTxtDireccion().trim();
         String edadStr = vista.getTxtEdad().trim();
-        
+
         System.out.println("Datos capturados:");
         System.out.println("Nombre: " + nombre);
         System.out.println("Cédula: " + cedula);
@@ -46,8 +51,8 @@ public class UsuarioControlador {
         System.out.println("Alias: " + alias);
 
         // 2. VALIDACIONES
-        if (alias.isEmpty() || clave.isEmpty() || cedula.isEmpty() || 
-            nombre.isEmpty() || direccion.isEmpty() || edadStr.isEmpty()) {
+        if (alias.isEmpty() || clave.isEmpty() || cedula.isEmpty()
+                || nombre.isEmpty() || direccion.isEmpty() || edadStr.isEmpty()) {
             vista.mostrarMensaje(" Todos los campos son obligatorios.");
             return;
         }
@@ -74,7 +79,7 @@ public class UsuarioControlador {
         // 3. CREAR PERSONA
         System.out.println("Creando objeto PersonaModelo");
         PersonaModelo nuevaPersona = new PersonaModelo(nombre, edad, cedula, direccion);
-        
+
         // Validar cédula con algoritmo
         if (!nuevaPersona.validarCedula(cedula)) {
             vista.mostrarMensaje("️ Cédula inválida.");
@@ -84,11 +89,11 @@ public class UsuarioControlador {
         // 4. INSERTAR PERSONA EN BD
         System.out.println("Insertando persona en BDD");
         nuevaPersona.insertarPersona(nuevaPersona);
-        
+
         // Verificar si se generó ID
         int idPersona = nuevaPersona.getIdPersona();
         System.out.println("ID Persona generado: " + idPersona);
-        
+
         if (idPersona == 0) {
             vista.mostrarMensaje(" Error al guardar persona. Intente nuevamente.");
             return;
@@ -100,34 +105,46 @@ public class UsuarioControlador {
         nuevoUsuario.setAlias(alias);
         nuevoUsuario.setClave(clave);
         nuevoUsuario.setIdPersona(idPersona);  // Pasar el ID
-        
+
         // 6. INSERTAR USUARIO EN BDD
         System.out.println("Insertando usuario en BDD");
         nuevoUsuario.insertarUsuario(nuevaPersona);
 
         // 7. MOSTRAR RESULTADO
-        String resultado = "DATOS GUARDADOS\n" +
-                          "ID Persona: " + idPersona + "\n" +
-                          "Nombre: " + nombre + "\n" +
-                          "Cédula: " + cedula + "\n" +
-                          "Edad: " + edad + "\n" +
-                          "Dirección: " + direccion + "\n" +
-                          "Alias: " + alias + "\n" +
-                          "Clave: " + clave ;
-        
-        vista.setCampoResultado(resultado);
+        String resultado = "DATOS GUARDADOS\n"
+                + "ID Persona: " + idPersona + "\n"
+                + "Nombre: " + nombre + "\n"
+                + "Cédula: " + cedula + "\n"
+                + "Edad: " + edad + "\n"
+                + "Dirección: " + direccion + "\n"
+                + "Alias: " + alias + "\n"
+                + "Clave: " + clave;
+
+        listaUsuarios.add(nuevoUsuario);
         System.out.println("PROCESO COMPLETADO ");
-        
+
     }
-     public void iniciar() {
+
+    private void cargarUsuarios() throws SQLException {
+        ArrayList<Object[]> listaFilas = modelo.datosUsuarios();
+        for (Object[] listaFila : listaFilas) {
+            vista.getModelo().addRow(listaFila);
+        }
+        vista.getTblDatos().setModel(vista.getModelo());
+
+    }
+    
+
+    public void iniciar() {
         // 1. Asignar el Controlador como oyente a los botones de la Vista
         vista.getBtnGuardar().addActionListener(e -> generarUsuario());
         //pv.getBtnListar().addActionListener(e -> actualizarListaPersonas());
+        vista.setDatos(listaUsuarios);
+        vista.limpiar();
 
         // 2. Mostrar la Vista
         vista.setVisible(true);
         //actualizarListaPersonas(); // Carga inicial
-}
-    
-     
+    }
+
 }
