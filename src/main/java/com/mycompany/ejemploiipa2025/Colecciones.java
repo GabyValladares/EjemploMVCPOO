@@ -64,56 +64,56 @@ public class Colecciones {
 //Realizar un programa que inicialice una lista con 10 valores aleatorios (del 1 al 10) y posteriormente muestre en
 //pantalla cada elemento de la lista junto con su cuadrado y su cubo.
         //CREAR LA LISTA
-        double[] listaAleatorios = new double[10];
-        //INICIALIZAR 
-        for (int i = 0; i < 10; i++) {
-            //AUXILIARES
-            double cuadrado = 0;
-            double cubo = 0;
-            //uso de números randomicos
-            listaAleatorios[i] = (Math.random() * 10 + 1);
-            cuadrado = Math.pow(listaAleatorios[i], 2);
-            cubo = Math.pow(listaAleatorios[i], 3);
-            System.out.println("Posición" + i + ":" + listaAleatorios[i] + "\n"
-                    + "El número elevado al cuadrado es:" + cuadrado + "\n"
-                    + "El número elevado al cubo es:" + cubo);
-
-            //PENDIENTE: QUE EL NÚMERO SEA ENTERO ,2 DECIMALES
-        }
-//Ejercicio 2:
-//Crea una lista e inicializala con 5 cadenas de caracteres leídas por teclado. 
-//Copia los elementos de la lista en otra lista pero en orden inverso,
-//y muestra sus elementos por la pantalla.
-        int n = 4;
-        String[] listados = new String[5];
-        String[] Listauno = new String[5];
-        String[] listaTres = new String[5];
-        for (int i = 0; i < 5; i++) {
-            Listauno[i] = JOptionPane.showInputDialog("ingrese una palabra");
-            listados[n] = Listauno[i];
-            n--;
-
-        }
-        int y = 0;
-        for (String puntero : Listauno) {
-            String reversa = "";
-
-            for (int i = puntero.length() - 1; i >= 0; i--) {
-                reversa += puntero.charAt(i);
-            }
-            listaTres[y] = reversa;
-            y++;
-            System.out.println("puntero:" + puntero + "\n" + "reversa:" + reversa);
-        }
-
-        for (String puntero : listados) {
-            System.out.println("puntero2:" + puntero);
-
-        }
-        for (String puntero : listaTres) {
-            System.out.println("puntero3:" + puntero);
-
-        }
+//        double[] listaAleatorios = new double[10];
+//        //INICIALIZAR 
+//        for (int i = 0; i < 10; i++) {
+//            //AUXILIARES
+//            double cuadrado = 0;
+//            double cubo = 0;
+//            //uso de números randomicos
+//            listaAleatorios[i] = (Math.random() * 10 + 1);
+//            cuadrado = Math.pow(listaAleatorios[i], 2);
+//            cubo = Math.pow(listaAleatorios[i], 3);
+//            System.out.println("Posición" + i + ":" + listaAleatorios[i] + "\n"
+//                    + "El número elevado al cuadrado es:" + cuadrado + "\n"
+//                    + "El número elevado al cubo es:" + cubo);
+//
+//            //PENDIENTE: QUE EL NÚMERO SEA ENTERO ,2 DECIMALES
+//        }
+////Ejercicio 2:
+////Crea una lista e inicializala con 5 cadenas de caracteres leídas por teclado. 
+////Copia los elementos de la lista en otra lista pero en orden inverso,
+////y muestra sus elementos por la pantalla.
+//        int n = 4;
+//        String[] listados = new String[5];
+//        String[] Listauno = new String[5];
+//        String[] listaTres = new String[5];
+//        for (int i = 0; i < 5; i++) {
+//            Listauno[i] = JOptionPane.showInputDialog("ingrese una palabra");
+//            listados[n] = Listauno[i];
+//            n--;
+//
+//        }
+//        int y = 0;
+//        for (String puntero : Listauno) {
+//            String reversa = "";
+//
+//            for (int i = puntero.length() - 1; i >= 0; i--) {
+//                reversa += puntero.charAt(i);
+//            }
+//            listaTres[y] = reversa;
+//            y++;
+//            System.out.println("puntero:" + puntero + "\n" + "reversa:" + reversa);
+//        }
+//
+//        for (String puntero : listados) {
+//            System.out.println("puntero2:" + puntero);
+//
+//        }
+//        for (String puntero : listaTres) {
+//            System.out.println("puntero3:" + puntero);
+//
+//        }
 
         //Ejercicio 3:
 //Se quiere realizar un programa que lea por teclado las 5 notas obtenidas por un alumno 
@@ -122,15 +122,25 @@ public class Colecciones {
         double[] listaNotas = new double[5];
         double prom = 0;
         double max = 0;
-        double min = 10;
+        double min = 0;
         for (int i = 0; i < listaNotas.length; i++) {
             listaNotas[i] = Double.parseDouble(JOptionPane.showInputDialog("Ingrese nota 1"));
+             System.out.println("Los números son:"+i+" "+listaNotas[i]);
         }
-
+        min=listaNotas[0];
         for (double l : listaNotas) {
+           
             prom += (l) / listaNotas.length;
-            
+                    if(l>max){
+                        max=l;
+                    }
+                    if(l<min){
+                        min=l;
+                    }
         }
+        System.out.println("el promedio es:"+prom+"\n"+
+                "El mayor es:"+max+"\n"+
+                "El menor es:"+min);
     }
 
 }
