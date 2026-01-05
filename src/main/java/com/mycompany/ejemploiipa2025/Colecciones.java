@@ -4,6 +4,7 @@
  */
 package com.mycompany.ejemploiipa2025;
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import modelo.PersonaModelo;
 
@@ -118,30 +119,45 @@ public class Colecciones {
         //Ejercicio 3:
 //Se quiere realizar un programa que lea por teclado las 5 notas obtenidas por un alumno 
 //(comprendidas entre 0 y 10). A continuación debe mostrar todas las notas, la nota media, 
-//la nota más alta que ha sacado y la menor
-        double[] listaNotas = new double[5];
-        double prom = 0;
-        double max = 0;
-        double min = 0;
-        for (int i = 0; i < listaNotas.length; i++) {
-            listaNotas[i] = Double.parseDouble(JOptionPane.showInputDialog("Ingrese nota 1"));
-             System.out.println("Los números son:"+i+" "+listaNotas[i]);
-        }
-        min=listaNotas[0];
-        for (double l : listaNotas) {
-           
-            prom += (l) / listaNotas.length;
-                    if(l>max){
-                        max=l;
-                    }
-                    if(l<min){
-                        min=l;
-                    }
-        }
-        System.out.println("el promedio es:"+prom+"\n"+
-                "El mayor es:"+max+"\n"+
-                "El menor es:"+min);
-    }
+////la nota más alta que ha sacado y la menor
+//        double[] listaNotas = new double[5];
+//        double prom = 0;
+//        double max = 0;
+//        double min = 0;
+//        for (int i = 0; i < listaNotas.length; i++) {
+//            listaNotas[i] = Double.parseDouble(JOptionPane.showInputDialog("Ingrese nota 1"));
+//             System.out.println("Los números son:"+i+" "+listaNotas[i]);
+//        }
+//        min=listaNotas[0];
+//        for (double l : listaNotas) {
+//           
+//            prom += (l) / listaNotas.length;
+//                    if(l>max){
+//                        max=l;
+//                    }
+//                    if(l<min){
+//                        min=l;
+//                    }
+//        }
+//        System.out.println("el promedio es:"+prom+"\n"+
+//                "El mayor es:"+max+"\n"+
+//                "El menor es:"+min);
+    
+    //PRUEBA
+    
+    
+    //LISTAS DINÁMICAS
+    
+    ArrayList<String> listaNombres1=new ArrayList<>();
+   listaNombres1.add("Juan");
+   
+   for(String s:listaNombres1){
+       System.out.println(s);
+   }
+    
+    
+            
+  }  
 
 }
 
