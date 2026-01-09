@@ -4,8 +4,20 @@
  */
 package vista;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import modelo.UsuarioModelo;
 
 /**
  *
@@ -47,6 +59,7 @@ public class UsuarioVista extends javax.swing.JFrame {
         btnCrear = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtAMostrar = new javax.swing.JTextArea();
+        btnPDF = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,6 +91,13 @@ public class UsuarioVista extends javax.swing.JFrame {
         txtAMostrar.setColumns(20);
         txtAMostrar.setRows(5);
         jScrollPane1.setViewportView(txtAMostrar);
+
+        btnPDF.setText("Generar PDF");
+        btnPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPDFActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,7 +142,9 @@ public class UsuarioVista extends javax.swing.JFrame {
                                     .addComponent(txtAlias, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addComponent(btnCrear))
+                        .addComponent(btnCrear)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPDF))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(52, 52, 52)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -162,7 +184,9 @@ public class UsuarioVista extends javax.swing.JFrame {
                     .addComponent(lblClave)
                     .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCrear)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCrear)
+                    .addComponent(btnPDF))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                 .addContainerGap())
@@ -175,49 +199,89 @@ public class UsuarioVista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCrearActionPerformed
 
-    
+    private void btnPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPDFActionPerformed
+        // TODO add your handling code here:
+        UsuarioModelo p=new UsuarioModelo();
+        p.setCedula(txtCedula.getText());
+        p.setNombres(txtNombre.getText());
+        p.setDireccion(txtDireccion.getText());
+        Document document = new Document();
+
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream("prueba1" + txtCedula.getText() + ".pdf"));
+            document.open();
+            // Establecer márgenes
+            document.setMargins(50, 50, 50, 50);
+
+            // Establecer tamaño de página
+            document.setPageSize(PageSize.A4);
+            // Crear una fuente con estilo y tamaño específicos
+            Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.BLUE);
+
+            // Crear un párrafo con la fuente especificada
+            Paragraph paragraph = new Paragraph("REPORTE FORMULARIO USUARIOS", font);
+            paragraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(paragraph);
+            //SECCIÓN 2
+            Font font1 = FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.DARK_GRAY);
+            // Añadir espaciado antes del párrafo
+            Paragraph paragraph1 = new Paragraph(p.toString(), font1);
+            paragraph1.setSpacingBefore(10);
+            paragraph1.setAlignment(Element.ALIGN_LEFT);
+            document.add(paragraph1);
+            //SECCIÓN 3
+            // Añadir espaciado antes del párrafo
+            Paragraph paragraph2 = new Paragraph(p.toString(), font1);
+            paragraph1.setSpacingBefore(10);
+            paragraph1.setAlignment(Element.ALIGN_JUSTIFIED);
+            document.add(paragraph2);
+
+            document.close();
+            JOptionPane.showMessageDialog(this, "PDF generado correctamente.");
+        } catch (DocumentException | IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al generar el PDF: " + e.getMessage());
+
+    }//GEN-LAST:event_btnPDFActionPerformed
+
+    }
+
     //AÑADIR ENCAPSULAMIENTO PERSONALIZADO
-    
-    public String getCampoNombre(){
+    public String getCampoNombre() {
         return txtNombre.getText();
     }
-    
-     public String getCampoCedula(){
+
+    public String getCampoCedula() {
         return txtCedula.getText();
     }
-    
-     public String getCampoDireccion(){
+
+    public String getCampoDireccion() {
         return txtDireccion.getText();
     }
-    
-     public int getCampoEdad(){
+
+    public int getCampoEdad() {
         return Integer.parseInt(txtEdad.getText());
     }
-    
-     public String getCampoAlias(){
+
+    public String getCampoAlias() {
         return txtAlias.getText();
     }
-    
-     public String getCampoClave(){
+
+    public String getCampoClave() {
         return txtClave.getText();
     }
-    
-     public JButton getCampoCrear(){
-         return btnCrear;
-     }
-     
-     public void setCampoResultado(String mensaje){
-         txtAMostrar.setText(mensaje);
-     }
-    
-    public void mostrarMensaje(String mensaje){
+
+    public JButton getCampoCrear() {
+        return btnCrear;
+    }
+
+    public void setCampoResultado(String mensaje) {
+        txtAMostrar.setText(mensaje);
+    }
+
+    public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(rootPane, mensaje);
     }
-    
-    
-    
-    
-    
+
     /**
      * @param args the command line arguments
      */
@@ -256,6 +320,7 @@ public class UsuarioVista extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrear;
+    private javax.swing.JButton btnPDF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAlias;

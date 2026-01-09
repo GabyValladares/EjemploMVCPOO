@@ -6,6 +6,7 @@ modelo\UsuarioModelo.class
 vista\PersonaVista$3.class
 vista\PersonaVista$1.class
 vista\UsuarioVista$1.class
+com\mycompany\ejemploiipa2025\File.class
 com\mycompany\ejemploiipa2025\Prueba$4.class
 controlador\UsuarioControlador.class
 vista\PersonaVista$2.class
@@ -19,4 +20,5 @@ com\mycompany\ejemploiipa2025\Prueba$1.class
 vista\PersonaVista$4.class
 vista\PersonaVista.class
 modelo\PersonaModelo.class
+.netbeans_automatic_build
 vista\Main.class
